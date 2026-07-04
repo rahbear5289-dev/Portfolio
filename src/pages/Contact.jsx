@@ -1,9 +1,18 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
-import { Send, MapPin, Phone, Mail, Linkedin, Github, Twitter, Facebook, HelpCircle } from 'lucide-react';
+import { Send, MapPin, Phone, Mail, Linkedin, Github, Twitter, Facebook, Cpu, GripHorizontal } from 'lucide-react';
+import Footer from '../Components/Footer';
+import gsap from 'gsap';
+import { Draggable } from 'gsap/all';
+
+if (typeof window !== "undefined") {
+    gsap.registerPlugin(Draggable);
+}
 
 const Contact = () => {
-    const [faqOpen, setFaqOpen] = useState(null);
+    const containerRef = useRef(null);
+    const heroRef = useRef(null);
+    const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
 
     const faqs = [
         { q: "What is your typical turnaround time?", a: "For standard websites, it takes about 1-2 weeks. Complex apps may take 4+ weeks." },
@@ -11,188 +20,196 @@ const Contact = () => {
         { q: "What is your pricing model?", a: "I usually charge per project, but I am open to hourly rates for consulting." },
     ];
 
-    return (
-        <div className="min-h-screen bg-slate-900 text-white pt-28 px-6 pb-20 relative">
-            <div className="max-w-7xl mx-auto">
-                <div className="flex flex-col md:flex-row gap-16 mb-24">
+    // Mouse movement handler
+    useEffect(() => {
+        const handleMouseMove = (e) => {
+            const x = (e.clientX / window.innerWidth) * 2 - 1;
+            const y = (e.clientY / window.innerHeight) * 2 - 1;
+            setMousePos({ x, y });
+        };
+        window.addEventListener('mousemove', handleMouseMove);
+        return () => window.removeEventListener('mousemove', handleMouseMove);
+    }, []);
 
+    // Draggable terminal logger
+    useEffect(() => {
+        const ctx = gsap.context(() => {
+            Draggable.create(".draggable-contact-console", {
+                bounds: heroRef.current,
+                inertia: true,
+                edgeResistance: 0.65,
+                type: "x,y",
+            });
+        }, containerRef);
+        return () => ctx.revert();
+    }, []);
+
+    return (
+        <div
+            ref={containerRef}
+            className="min-h-screen bg-[#050712] text-white selection:bg-cyan-500 selection:text-black font-sans overflow-x-hidden relative pt-24"
+        >
+            {/* Background Glow */}
+            <div className="pointer-events-none fixed inset-0 z-0 bg-[radial-gradient(circle_at_18%_18%,_rgba(34,211,238,0.07),_transparent_34%),radial-gradient(circle_at_78%_22%,_rgba(168,85,247,0.06),_transparent_34%)]" />
+
+            <div className="max-w-7xl mx-auto px-6 relative z-10">
+
+                {/* --- HERO SECTION --- */}
+                <section
+                    ref={heroRef}
+                    className="relative h-[55vh] flex flex-col justify-center items-center overflow-hidden rounded-3xl border border-white/5 bg-[#080b18]/40 mb-20 px-6"
+                >
+                    <motion.div
+                        className="absolute z-0 w-150 h-150 bg-cyan-500/5 blur-[120px] rounded-full pointer-events-none mix-blend-screen"
+                        animate={{ x: mousePos.x * 25, y: mousePos.y * 25 }}
+                    />
+
+                    <div className="relative z-10 text-center pointer-events-none">
+                        <motion.div
+                            animate={{
+                                x: mousePos.x * 8,
+                                y: mousePos.y * 8,
+                                rotateX: mousePos.y * -4,
+                                rotateY: mousePos.x * 4,
+                            }}
+                        >
+                            <div className="mx-auto mb-6 inline-flex items-center gap-2 rounded-full border border-cyan-500/25 bg-cyan-500/10 px-4 py-2 text-[11px] font-black uppercase tracking-[0.24em] text-cyan-300 shadow-[0_0_28px_rgba(34,211,238,0.12)]">
+                                <Cpu className="w-3.5 h-3.5 animate-pulse" />
+                                <span>Direct Communication Link</span>
+                            </div>
+
+                            <h1 className="text-5xl md:text-8xl font-black mb-6 tracking-tighter leading-none">
+                                GET IN <span className="text-transparent bg-clip-text bg-gradient-to-b from-white to-gray-500">TOUCH.</span>
+                            </h1>
+                            <p className="text-slate-400 max-w-xl mx-auto text-sm sm:text-base leading-relaxed">
+                                Let's build something exceptional. Get in touch to schedule an architecture design session.
+                            </p>
+                        </motion.div>
+                    </div>
+
+                    {/* Draggable Terminal Panel */}
+                    <div className="draggable-contact-console absolute z-20 top-[15%] right-[5%] cursor-grab active:cursor-grabbing hidden md:block">
+                        <div className="w-80 bg-[#0b1020]/95 backdrop-blur-xl border border-white/10 rounded-xl shadow-[0_0_40px_rgba(0,0,0,0.5)] overflow-hidden transform rotate-3 hover:rotate-0 transition-transform">
+                            <div className="h-8 bg-white/5 border-b border-white/5 flex items-center justify-between px-3 cursor-grab">
+                                <div className="flex gap-1">
+                                    <span className="w-2 h-2 rounded-full bg-red-400/80" />
+                                    <span className="w-2 h-2 rounded-full bg-yellow-300/80" />
+                                    <span className="w-2 h-2 rounded-full bg-emerald-400/80" />
+                                </div>
+                                <span className="text-[9px] font-mono text-slate-500">mail_server.log</span>
+                            </div>
+                            <div className="p-4 font-mono text-[10px] text-slate-400 space-y-1">
+                                <p><span className="text-cyan-400">&gt;</span> connect mail_agent...</p>
+                                <p><span className="text-cyan-400">&gt;</span> port: 465 (secured)</p>
+                                <p><span className="text-cyan-400">&gt;</span> status: awaiting message</p>
+                                <p className="text-cyan-400 animate-pulse">&gt; ready</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <div className="flex flex-col md:flex-row gap-12 mb-24">
                     {/* Contact Info */}
                     <motion.div
-                        initial={{ opacity: 0, x: -50 }}
+                        initial={{ opacity: 0, x: -30 }}
                         animate={{ opacity: 1, x: 0 }}
-                        transition={{ duration: 0.8 }}
-                        className="md:w-1/3 space-y-8"
+                        transition={{ duration: 0.6 }}
+                        className="md:w-1/3 space-y-6"
                     >
-                        <h1 className="text-5xl font-black">Get in <span className="text-blue-500">Touch</span></h1>
-                        <p className="text-gray-400 leading-relaxed">
-                            Have a project in mind? Let's build something amazing together.
-                            I am currently **available** for freelance work.
+                        <h2 className="text-2xl font-black text-white tracking-tight">Channel Logs</h2>
+                        <p className="text-slate-400 text-xs leading-relaxed">
+                            Have a project outline, product spec sheet, or just an initial idea? Ping me directly.
                         </p>
 
-                        <div className="space-y-6">
-                            <div className="flex items-center space-x-4">
-                                <div className="w-12 h-12 bg-blue-600/20 rounded-full flex items-center justify-center text-blue-400">
-                                    <Phone className="w-6 h-6" />
+                        <div className="space-y-4">
+                            <div className="flex items-center space-x-4 bg-[#0c0f1d] border border-[#1e293b] p-4 rounded-xl">
+                                <div className="w-10 h-10 bg-[#181d30] border border-white/5 rounded-lg flex items-center justify-center text-cyan-400">
+                                    <Phone className="w-5 h-5" />
                                 </div>
                                 <div>
-                                    <h3 className="font-bold">Phone</h3>
-                                    <p className="text-gray-400">+1 234 567 890</p>
+                                    <h3 className="text-xs font-bold text-slate-500 uppercase tracking-wider">Phone</h3>
+                                    <p className="text-white text-xs font-mono font-bold">+1 234 567 890</p>
                                 </div>
                             </div>
-                            <div className="flex items-center space-x-4">
-                                <div className="w-12 h-12 bg-purple-600/20 rounded-full flex items-center justify-center text-purple-400">
-                                    <Mail className="w-6 h-6" />
+                            <div className="flex items-center space-x-4 bg-[#0c0f1d] border border-[#1e293b] p-4 rounded-xl">
+                                <div className="w-10 h-10 bg-[#181d30] border border-white/5 rounded-lg flex items-center justify-center text-cyan-400">
+                                    <Mail className="w-5 h-5" />
                                 </div>
                                 <div>
-                                    <h3 className="font-bold">Email</h3>
-                                    <p className="text-gray-400">hello@rahbear.dev</p>
+                                    <h3 className="text-xs font-bold text-slate-500 uppercase tracking-wider">Email</h3>
+                                    <p className="text-white text-xs font-mono font-bold">hello@rahbear.dev</p>
                                 </div>
                             </div>
-                            <div className="flex items-center space-x-4">
-                                <div className="w-12 h-12 bg-green-600/20 rounded-full flex items-center justify-center text-green-400">
-                                    <MapPin className="w-6 h-6" />
+                            <div className="flex items-center space-x-4 bg-[#0c0f1d] border border-[#1e293b] p-4 rounded-xl">
+                                <div className="w-10 h-10 bg-[#181d30] border border-white/5 rounded-lg flex items-center justify-center text-cyan-400">
+                                    <MapPin className="w-5 h-5" />
                                 </div>
                                 <div>
-                                    <h3 className="font-bold">Location</h3>
-                                    <p className="text-gray-400">New York, USA</p>
+                                    <h3 className="text-xs font-bold text-slate-500 uppercase tracking-wider">Location</h3>
+                                    <p className="text-white text-xs font-bold">New York, USA</p>
                                 </div>
                             </div>
                         </div>
 
-                        {/* Socials */}
-                        <div className="pt-6 border-t border-slate-800">
-                            <h3 className="font-bold mb-4">Follow Me</h3>
-                            <div className="flex space-x-4">
-                                <div className="p-3 bg-slate-800 rounded-lg hover:bg-blue-600 transition-colors cursor-pointer"><Linkedin className="w-5 h-5" /></div>
-                                <div className="p-3 bg-slate-800 rounded-lg hover:bg-gray-700 transition-colors cursor-pointer"><Github className="w-5 h-5" /></div>
-                                <div className="p-3 bg-slate-800 rounded-lg hover:bg-blue-400 transition-colors cursor-pointer"><Twitter className="w-5 h-5" /></div>
-                                <div className="p-3 bg-slate-800 rounded-lg hover:bg-blue-800 transition-colors cursor-pointer"><Facebook className="w-5 h-5" /></div>
+                        {/* Social Links */}
+                        <div className="pt-6 border-t border-[#1e293b]">
+                            <h3 className="font-bold text-xs text-slate-500 uppercase tracking-wider mb-4">Direct Socials</h3>
+                            <div className="flex space-x-3">
+                                <div className="p-2.5 bg-[#0c0f1d] border border-[#1e293b] rounded-lg hover:bg-cyan-500 hover:text-black transition-colors cursor-pointer"><Linkedin className="w-4 h-4" /></div>
+                                <div className="p-2.5 bg-[#0c0f1d] border border-[#1e293b] rounded-lg hover:bg-cyan-500 hover:text-black transition-colors cursor-pointer"><Github className="w-4 h-4" /></div>
+                                <div className="p-2.5 bg-[#0c0f1d] border border-[#1e293b] rounded-lg hover:bg-cyan-500 hover:text-black transition-colors cursor-pointer"><Twitter className="w-4 h-4" /></div>
+                                <div className="p-2.5 bg-[#0c0f1d] border border-[#1e293b] rounded-lg hover:bg-cyan-500 hover:text-black transition-colors cursor-pointer"><Facebook className="w-4 h-4" /></div>
                             </div>
                         </div>
                     </motion.div>
 
-                    {/* 3D Contact Form */}
+                    {/* Contact Form */}
                     <motion.div
-                        initial={{ opacity: 0, x: 50 }}
+                        initial={{ opacity: 0, x: 30 }}
                         animate={{ opacity: 1, x: 0 }}
-                        transition={{ duration: 0.8, delay: 0.2 }}
+                        transition={{ duration: 0.6 }}
                         className="md:w-2/3"
                     >
-                        <form className="bg-white/5 backdrop-blur-xl border border-white/10 p-8 rounded-3xl shadow-2xl space-y-6">
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <form className="bg-[#0c0f1d] border border-[#1e293b] p-6 rounded-2xl shadow-xl space-y-5 relative">
+                            <div className="absolute inset-0 bg-cyan-500/5 blur-2xl pointer-events-none" />
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 relative z-10">
                                 <div className="space-y-2">
-                                    <label className="text-sm font-bold ml-1">Name</label>
+                                    <label className="text-[10px] font-black uppercase tracking-wider text-slate-500 ml-1">Name</label>
                                     <input
                                         type="text"
                                         placeholder="John Doe"
-                                        className="w-full bg-slate-800/50 border border-slate-700 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all text-white placeholder:text-gray-600"
+                                        className="w-full bg-[#050712] border border-[#1e293b] rounded-xl px-4 py-3 focus:outline-none focus:border-cyan-500 transition-all text-xs text-white placeholder:text-slate-700"
                                     />
                                 </div>
                                 <div className="space-y-2">
-                                    <label className="text-sm font-bold ml-1">Email</label>
+                                    <label className="text-[10px] font-black uppercase tracking-wider text-slate-500 ml-1">Email</label>
                                     <input
                                         type="email"
                                         placeholder="john@example.com"
-                                        className="w-full bg-slate-800/50 border border-slate-700 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all text-white placeholder:text-gray-600"
+                                        className="w-full bg-[#050712] border border-[#1e293b] rounded-xl px-4 py-3 focus:outline-none focus:border-cyan-500 transition-all text-xs text-white placeholder:text-slate-700"
                                     />
                                 </div>
                             </div>
-
-                            <div className="space-y-2">
-                                <label className="text-sm font-bold ml-1">Message</label>
+                            <div className="space-y-2 relative z-10">
+                                <label className="text-[10px] font-black uppercase tracking-wider text-slate-500 ml-1">Message</label>
                                 <textarea
-                                    rows="4"
-                                    placeholder="Tell me about your project..."
-                                    className="w-full bg-slate-800/50 border border-slate-700 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all text-white placeholder:text-gray-600 resize-none"
-                                ></textarea>
+                                    rows="5"
+                                    placeholder="Brief outline of your project..."
+                                    className="w-full bg-[#050712] border border-[#1e293b] rounded-xl px-4 py-3 focus:outline-none focus:border-cyan-500 transition-all text-xs text-white placeholder:text-slate-700"
+                                />
                             </div>
-
-                            <motion.button
-                                whileHover={{ scale: 1.02 }}
-                                whileTap={{ scale: 0.98 }}
-                                className="bg-gradient-to-r from-blue-600 to-purple-600 w-full py-4 rounded-xl font-bold text-lg shadow-lg flex items-center justify-center space-x-2"
+                            <button
+                                type="submit"
+                                className="w-full bg-cyan-500 hover:bg-cyan-400 text-black py-3 rounded-xl font-black text-xs uppercase tracking-widest transition-all flex items-center justify-center gap-2 cursor-pointer shadow-[0_0_20px_rgba(34,211,238,0.2)] relative z-10"
                             >
-                                <span>Send Message</span>
-                                <Send className="w-5 h-5" />
-                            </motion.button>
+                                <Send className="w-3.5 h-3.5" /> Send Message
+                            </button>
                         </form>
                     </motion.div>
                 </div>
 
-                {/* --- FAQ Section --- */}
-                <div className="max-w-3xl mx-auto">
-                    <h2 className="text-3xl font-black text-center mb-8 flex items-center justify-center gap-2">
-                        <HelpCircle className="text-purple-400" /> Frequently Asked Questions
-                    </h2>
-                    <div className="space-y-4">
-                        {faqs.map((item, idx) => (
-                            <div
-                                key={idx}
-                                className="bg-slate-800/50 border border-slate-700 rounded-xl overflow-hidden cursor-pointer"
-                                onClick={() => setFaqOpen(faqOpen === idx ? null : idx)}
-                            >
-                                <div className="p-6 flex justify-between items-center bg-slate-800 hover:bg-slate-700 transition-colors">
-                                    <h3 className="font-bold text-lg">{item.q}</h3>
-                                    <span className="text-2xl">{faqOpen === idx ? '-' : '+'}</span>
-                                </div>
-                                {faqOpen === idx && (
-                                    <div className="p-6 text-gray-300 border-t border-slate-700 bg-slate-900/50">
-                                        {item.a}
-                                    </div>
-                                )}
-                            </div>
-                        ))}
-                    </div>
-                </div>
-
-
-                {/* --- Location & Availability --- */}
-                <div className="mt-32 grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-                    {/* Fake Map Visual */}
-                    <div className="rounded-3xl overflow-hidden h-80 relative border border-slate-700 bg-slate-800 group">
-                        <img
-                            src="https://images.unsplash.com/photo-1524661135-423995f22d0b?auto=format&fit=crop&q=80&w=1000"
-                            alt="Map"
-                            className="w-full h-full object-cover opacity-50 group-hover:opacity-70 transition-opacity"
-                        />
-                        <div className="absolute inset-0 flex items-center justify-center">
-                            <div className="bg-slate-900/90 p-4 rounded-xl flex items-center gap-3 border border-white/10 shadow-2xl backdrop-blur-md">
-                                <div className="p-2 bg-red-500 rounded-full animate-pulse">
-                                    <MapPin className="text-white w-6 h-6" />
-                                </div>
-                                <div>
-                                    <h4 className="font-bold text-white">Based in New York</h4>
-                                    <p className="text-xs text-gray-400">Available for Remote Work</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* Availability Calendar (Static) */}
-                    <div className="bg-slate-800/50 p-8 rounded-3xl border border-slate-700">
-                        <h2 className="text-3xl font-black mb-6 flex items-center gap-3">
-                            Availability
-                        </h2>
-                        <div className="space-y-4">
-                            <div className="flex justify-between items-center pb-4 border-b border-slate-700">
-                                <span className="text-gray-300">Current Status</span>
-                                <span className="px-3 py-1 bg-green-500/20 text-green-400 rounded-full text-sm font-bold flex items-center gap-2">
-                                    <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse" /> Accepting New Projects
-                                </span>
-                            </div>
-                            <div className="grid grid-cols-7 gap-2 text-center text-sm text-gray-400 mt-4">
-                                {['M', 'T', 'W', 'T', 'F', 'S', 'S'].map((d, i) => (<div key={i}>{d}</div>))}
-                                {Array.from({ length: 31 }).map((_, i) => (
-                                    <div key={i} className={`p-2 rounded-lg ${i > 20 ? 'bg-green-500/20 text-green-400' : 'bg-slate-700/30'}`}>
-                                        {i + 1}
-                                    </div>
-                                ))}
-                            </div>
-                            <p className="text-xs text-center text-gray-500 mt-4">highlighted dates are open for booking</p>
-                        </div>
-                    </div>
-                </div>
             </div>
+            <Footer />
         </div>
     );
 };

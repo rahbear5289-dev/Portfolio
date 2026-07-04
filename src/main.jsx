@@ -8,16 +8,28 @@ import { ClerkProvider } from '@clerk/clerk-react'
 // Import your publishable key
 const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY
 
-if (!PUBLISHABLE_KEY) {
-  throw new Error("Missing Publishable Key")
-}
+const app = (
+  <StrictMode>
+    <BrowserRouter>
+      <App />
+    </BrowserRouter>
+  </StrictMode>
+)
 
-createRoot(document.getElementById('root')).render(
+const clerkApp = (
   <StrictMode>
     <BrowserRouter>
       <ClerkProvider publishableKey={PUBLISHABLE_KEY} afterSignOutUrl="/">
         <App />
       </ClerkProvider>
     </BrowserRouter>
-  </StrictMode>,
+  </StrictMode>
+)
+
+if (!PUBLISHABLE_KEY) {
+  console.warn('Missing VITE_CLERK_PUBLISHABLE_KEY. Starting app without Clerk authentication.');
+}
+
+createRoot(document.getElementById('root')).render(
+  PUBLISHABLE_KEY ? clerkApp : app,
 )

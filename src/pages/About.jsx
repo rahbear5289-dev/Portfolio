@@ -1,180 +1,475 @@
-import React from 'react';
-import { motion } from 'framer-motion';
-import { User, Code2, Coffee, Rocket, BookOpen, Award, Heart } from 'lucide-react';
+ "use client";
 
-const About = () => {
-    const cards = [
-        { icon: <Code2 className="w-8 h-8" />, title: "Development", desc: "Clean, modern code patterns" },
-        { icon: <Rocket className="w-8 h-8" />, title: "Performance", desc: "Optimized for speed" },
-        { icon: <Coffee className="w-8 h-8" />, title: "Dedication", desc: "Passionate about pixels" },
-    ];
+import { useEffect, useRef, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import {
+  Zap,
+  Code2,
+  Globe,
+  Flag,
+  Terminal,
+  HardDrive,
+  Brain,
+  GripHorizontal,
+  Database,
+  Cpu,
+  Layers,
+  Rocket,
+  Sparkles,
+  Lock,
+  Workflow,
+} from "lucide-react";
+import Header from "../Components/Header";
+import { Draggable } from "gsap/all";
+import Footer from "../Components/Footer";
 
-    const timeline = [
-        { year: "2023 - Present", title: "Senior Full Stack Dev", company: "Tech Solutions Inc.", desc: "Leading a team of 5 developers building scalable SaaS products." },
-        { year: "2021 - 2023", title: "Frontend Specialist", company: "Creative Agency", desc: "Built award-winning websites with heavy animation and interactivity." },
-        { year: "2019 - 2021", title: "Junior Developer", company: "StartUp Hub", desc: "Started my journey with React and Node.js ecosystems." },
-    ];
+// Register GSAP Plugins
+if (typeof window !== "undefined") {
+  gsap.registerPlugin(ScrollTrigger, Draggable);
+}
 
-    return (
-        <div className="min-h-screen bg-slate-900 text-white pt-24 pb-20 relative overflow-hidden">
-            {/* Background Elements */}
-            <div className="absolute top-[20%] right-[-10%] w-[400px] h-[400px] bg-purple-600/20 rounded-full blur-[100px]" />
-            <div className="absolute bottom-[10%] left-[-10%] w-[600px] h-[600px] bg-blue-600/10 rounded-full blur-[120px]" />
+const XBLTAbout = () => {
+  const containerRef = useRef(null);
+  const triggerRef = useRef(null);
+  const heroRef = useRef(null);
+  const [activeStory, setActiveStory] = useState(0);
 
-            <div className="max-w-7xl mx-auto px-6">
+  // --- MOUSE PARALLAX LOGIC ---
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
 
-                {/* --- Hero Section --- */}
-                <div className="flex flex-col md:flex-row items-center gap-16 mb-32">
-                    {/* Image/3D Area */}
-                    <motion.div
-                        initial={{ opacity: 0, x: -50 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ duration: 0.8 }}
-                        className="md:w-1/2 relative"
-                    >
-                        <div className="relative z-10 w-full aspect-square max-w-md mx-auto bg-gradient-to-tr from-blue-600 to-purple-600 rounded-3xl p-1 shadow-2xl rotate-3 hover:rotate-0 transition-all duration-500">
-                            <div className="w-full h-full bg-slate-800 rounded-3xl overflow-hidden relative">
-                                <img
-                                    src="https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?auto=format&fit=crop&q=80&w=600"
-                                    alt="Profile"
-                                    className="w-full h-full object-cover opacity-80 hover:opacity-100 transition-opacity"
-                                />
-                                <div className="absolute inset-0 bg-blue-900/40 mix-blend-overlay" />
-                            </div>
-                        </div>
-                        {/* Decorative Elements */}
-                        <motion.div
-                            animate={{ y: [0, 20, 0] }}
-                            transition={{ duration: 4, repeat: Infinity }}
-                            className="absolute -bottom-10 -left-10 w-24 h-24 bg-blue-500 rounded-2xl blur-xl opacity-50 z-0"
-                        />
-                    </motion.div>
+  useEffect(() => {
+    const handleMouseMove = (e) => {
+      const x = (e.clientX / window.innerWidth) * 2 - 1;
+      const y = (e.clientY / window.innerHeight) * 2 - 1;
+      setMousePos({ x, y });
+    };
 
-                    {/* Content Area */}
-                    <motion.div
-                        initial={{ opacity: 0, x: 50 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ duration: 0.8, delay: 0.2 }}
-                        className="md:w-1/2 space-y-8"
-                    >
-                        <h1 className="text-5xl font-black">About <span className="text-blue-500">Me</span></h1>
-                        <p className="text-lg text-gray-300 leading-relaxed">
-                            I am a passionate Full Stack Developer with a knack for creating immersive digital experiences.
-                            My journey started with a simple "Hello World" and has evolved into building complex, scalable applications.
-                            I believe in the power of clean code and user-centric design.
-                        </p>
+    window.addEventListener("mousemove", handleMouseMove);
+    return () => window.removeEventListener("mousemove", handleMouseMove);
+  }, []);
 
-                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                            {cards.map((card, idx) => (
-                                <motion.div
-                                    key={idx}
-                                    whileHover={{ y: -10, backgroundColor: 'rgba(255,255,255,0.1)' }}
-                                    className="bg-white/5 backdrop-blur-sm p-6 rounded-2xl border border-white/10 flex flex-col items-center text-center space-y-3 cursor-pointer"
-                                >
-                                    <div className="text-blue-400">{card.icon}</div>
-                                    <h3 className="font-bold text-lg">{card.title}</h3>
-                                    <p className="text-sm text-gray-400">{card.desc}</p>
-                                </motion.div>
-                            ))}
-                        </div>
-                    </motion.div>
-                </div>
+  // --- GSAP ANIMATION LOGIC ---
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      // 1. Draggable Code Window
+      Draggable.create(".draggable-code", {
+        bounds: heroRef.current,
+        inertia: true,
+        edgeResistance: 0.65,
+        type: "x,y",
+      });
 
-                {/* --- Timeline Section --- */}
-                <div className="mb-32">
-                    <h2 className="text-4xl font-black text-center mb-16">My <span className="text-purple-500">Journey</span></h2>
-                    <div className="space-y-8 max-w-4xl mx-auto">
-                        {timeline.map((item, idx) => (
-                            <motion.div
-                                key={idx}
-                                initial={{ opacity: 0, y: 20 }}
-                                whileInView={{ opacity: 1, y: 0 }}
-                                viewport={{ once: true }}
-                                className="flex flex-col md:flex-row gap-6 bg-slate-800/50 p-8 rounded-3xl border border-slate-700 hover:border-blue-500 transition-colors"
-                            >
-                                <div className="md:w-1/4">
-                                    <span className="text-blue-400 font-bold text-xl">{item.year}</span>
-                                </div>
-                                <div className="md:w-3/4">
-                                    <h3 className="text-2xl font-bold text-white mb-2">{item.title}</h3>
-                                    <h4 className="text-lg text-purple-400 mb-4">{item.company}</h4>
-                                    <p className="text-gray-400">{item.desc}</p>
-                                </div>
-                            </motion.div>
-                        ))}
-                    </div>
-                </div>
+      // 2. Pin the Story Visual
+      ScrollTrigger.create({
+        trigger: triggerRef.current,
+        start: "top top",
+        end: "bottom bottom",
+        pin: ".pinned-story",
+        scrub: 1,
+      });
 
-                {/* --- Personal Philosophy --- */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center bg-gradient-to-br from-blue-900/20 to-purple-900/20 p-12 rounded-3xl border border-white/5">
-                    <div className="space-y-6">
-                        <h2 className="text-3xl font-bold flex items-center gap-3">
-                            <Heart className="text-red-500" />
-                            What Drives Me
-                        </h2>
-                        <p className="text-gray-300 leading-relaxed">
-                            I don't just write code; I solve problems. My philosophy is that technology should be invisible—it should just work, enhancing the human experience without getting in the way.
-                            Whether I'm refactoring a database schema or tweaking a bezier curve animation, my goal is always excellence.
-                        </p>
-                    </div>
-                    <div className="grid grid-cols-2 gap-6">
-                        <div className="bg-slate-900 p-6 rounded-2xl border border-slate-700 text-center">
-                            <BookOpen className="w-8 h-8 text-yellow-500 mx-auto mb-3" />
-                            <h4 className="font-bold">Continuous Learning</h4>
-                        </div>
-                        <div className="bg-slate-900 p-6 rounded-2xl border border-slate-700 text-center">
-                            <Award className="w-8 h-8 text-green-500 mx-auto mb-3" />
-                            <h4 className="font-bold">Best Practices</h4>
-                        </div>
-                    </div>
-                </div>
+      // 3. Animate Text Steps (Wiggle + Fade)
+      gsap.utils.toArray(".story-step").forEach((step, index) => {
+        const tl = gsap.timeline({
+          scrollTrigger: {
+            trigger: step,
+            start: "top 60%",
+            end: "bottom 40%",
+            toggleActions: "play reverse play reverse",
+            onEnter: () => setActiveStory(index),
+            onEnterBack: () => setActiveStory(index),
+          },
+        });
 
+        tl.fromTo(
+          step,
+          { opacity: 0.5, x: -30, filter: "blur(4px)" },
+          { opacity: 1, x: 0, filter: "blur(0px)", duration: 0.5 },
+        ).to(
+          step.querySelector(".chapter-num"),
+          {
+            x: 10,
+            duration: 0.2,
+            yoyo: true,
+            repeat: 1,
+            ease: "power1.inOut",
+          },
+          "<",
+        );
+      });
+    }, containerRef);
+
+    return () => ctx.revert();
+  }, []);
+
+  return (
+    <div
+      ref={containerRef}
+      className="min-h-screen bg-[#050712] text-white selection:bg-cyan-500 selection:text-black font-sans overflow-x-hidden relative"
+    >
+      <Header />
+
+      {/* Radial glows matching Home.jsx */}
+      <div className="pointer-events-none fixed inset-0 z-0 bg-[radial-gradient(circle_at_18%_18%,_rgba(34,211,238,0.07),_transparent_34%),radial-gradient(circle_at_78%_22%,_rgba(168,85,247,0.06),_transparent_34%)]" />
+
+      {/* --- HERO: INTERACTIVE PARALLAX --- */}
+      <section
+        ref={heroRef}
+        className="relative h-screen flex flex-col justify-center items-center overflow-hidden border-b border-white/10 perspective-1000 bg-[#050712]"
+      >
+        {/* Layer 1: Glow Orb (Subtle) */}
+        <motion.div
+          className="absolute z-0 w-200 h-200 bg-cyan-500/5 blur-[150px] rounded-full pointer-events-none mix-blend-screen"
+          animate={{ x: mousePos.x * 30, y: mousePos.y * 30 }}
+        />
+
+        {/* Layer 2: Main Content */}
+        <div className="relative z-10 text-center px-6 pointer-events-none">
+          <motion.div
+            animate={{
+              x: mousePos.x * 10,
+              y: mousePos.y * 10,
+              rotateX: mousePos.y * -5,
+              rotateY: mousePos.x * 5,
+            }}
+          >
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-cyan-500/30 bg-cyan-500/5 text-cyan-400 text-xs font-mono mb-8 backdrop-blur-md shadow-[0_0_20px_rgba(34,211,238,0.2)]">
+              <Flag className="w-3 h-3" />
+              <span>EST. 2026 • THE CREATION ENGINE</span>
             </div>
-
-            {/* --- Hobbies & Interests --- */}
-            <div className="mt-32">
-                <h2 className="text-4xl font-black text-center mb-16">Beyond the <span className="text-blue-500">Code</span></h2>
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-                    {[
-                        { icon: "🎮", title: "Gaming", desc: "RPG & Strategy games" },
-                        { icon: "📸", title: "Photography", desc: "Capturing urban life" },
-                        { icon: "📚", title: "Reading", desc: "Sci-Fi & Tech blogs" },
-                        { icon: "✈️", title: "Travel", desc: "Exploring new cultures" }
-                    ].map((hobby, idx) => (
-                        <motion.div
-                            key={idx}
-                            whileHover={{ scale: 1.05 }}
-                            className="bg-slate-800/50 p-8 rounded-2xl border border-slate-700 text-center hover:border-blue-500/50 transition-colors"
-                        >
-                            <div className="text-4xl mb-4">{hobby.icon}</div>
-                            <h3 className="font-bold text-xl mb-2">{hobby.title}</h3>
-                            <p className="text-gray-400 text-sm">{hobby.desc}</p>
-                        </motion.div>
-                    ))}
-                </div>
-            </div>
-
-            {/* --- A Day in the Life --- */}
-            <div className="mt-32 pb-20">
-                <h2 className="text-4xl font-black text-center mb-16">Day in the <span className="text-green-500">Life</span></h2>
-                <div className="space-y-6 max-w-3xl mx-auto">
-                    {[
-                        { time: "08:00 AM", activity: "Coffee & Code Review", color: "border-yellow-500" },
-                        { time: "10:00 AM", activity: "Deep Work Block (Feature Dev)", color: "border-blue-500" },
-                        { time: "01:00 PM", activity: "Team Sync & Planning", color: "border-purple-500" },
-                        { time: "03:00 PM", activity: "Learning & Research", color: "border-green-500" },
-                        { time: "06:00 PM", activity: "Gym & Personal Time", color: "border-red-500" }
-                    ].map((slot, idx) => (
-                        <div key={idx} className={`flex items-center gap-6 p-6 bg-slate-900 rounded-xl border-l-4 ${slot.color} shadow-lg`}>
-                            <div className="font-mono text-gray-400 w-24 flex-shrink-0">{slot.time}</div>
-                            <div className="font-bold text-lg">{slot.activity}</div>
-                        </div>
-                    ))}
-                </div>
-            </div>
-
+            <h1 className="text-7xl md:text-[10rem] font-bold tracking-tighter mb-6 leading-[0.9] text-white drop-shadow-2xl">
+              NOT A <br />
+              <span className="text-transparent bg-clip-text bg-gradient-to-b from-white to-gray-600">
+                BUILDER.
+              </span>
+            </h1>
+            <p className="text-xl md:text-2xl text-gray-400 max-w-3xl mx-auto leading-relaxed">
+              XBLT is an{" "}
+              <span className="text-white font-bold border-b border-cyan-400">
+                Orchestration Engine
+              </span>{" "}
+              that turns natural language into structured, production-ready
+              systems.
+            </p>
+          </motion.div>
         </div>
-    );
+
+        {/* Layer 3: DRAGGABLE TERMINAL */}
+        <div className="draggable-code absolute z-20 top-[20%] right-[10%] cursor-grab active:cursor-grabbing hidden md:block">
+          <div className="w-80 md:w-96 bg-[#0b1020]/95 backdrop-blur-xl border border-white/10 rounded-xl shadow-[0_0_50px_rgba(0,0,0,0.5)] overflow-hidden transform rotate-3 hover:rotate-0 transition-transform duration-300 hover:border-cyan-500/50">
+            <div className="h-8 bg-white/5 border-b border-white/5 flex items-center justify-between px-3 cursor-grab active:cursor-grabbing">
+              <div className="flex gap-1.5">
+                <div className="w-2.5 h-2.5 rounded-full bg-red-500/50"></div>
+                <div className="w-2.5 h-2.5 rounded-full bg-yellow-500/50"></div>
+                <div className="w-2.5 h-2.5 rounded-full bg-green-500/50"></div>
+              </div>
+              <div className="flex items-center gap-1 text-[10px] font-mono text-gray-500">
+                <GripHorizontal className="w-3 h-3" /> xblt_core.ts
+              </div>
+            </div>
+            <div className="p-4 font-mono text-xs text-gray-400 leading-relaxed pointer-events-none select-none">
+              <p>
+                <span className="text-purple-400">import</span>{" "}
+                {"{ Orchestrator }"}{" "}
+                <span className="text-purple-400">from</span>{" "}
+                <span className="text-green-400">'@xblt/core'</span>;
+              </p>
+              <br />
+              <p>
+                <span className="text-blue-400">const</span> engine ={" "}
+                <span className="text-yellow-300">new</span> Orchestrator();
+              </p>
+              <br />
+              <p className="text-cyan-400 animate-pulse">{`> Awaiting Input...`}</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* --- TECH STACK MARQUEE --- */}
+      <section className="py-10 border-b border-white/10 bg-white/2 overflow-hidden">
+        <div className="max-w-7xl mx-auto px-6 mb-4 text-center text-xs font-mono text-gray-500 uppercase tracking-widest">
+          Powered By Best-In-Class Tech
+        </div>
+        <div className="flex gap-12 justify-center items-center opacity-50 grayscale hover:grayscale-0 transition-all duration-500 flex-wrap">
+          <span className="text-lg font-bold flex items-center gap-2">
+            <Cpu className="w-5 h-5" /> GROQ
+          </span>
+          <span className="text-lg font-bold flex items-center gap-2">
+            <Sparkles className="w-5 h-5" /> GEMINI 1.5
+          </span>
+          <span className="text-lg font-bold flex items-center gap-2">
+            <Terminal className="w-5 h-5" /> OLLAMA
+          </span>
+          <span className="text-lg font-bold flex items-center gap-2">
+            <Code2 className="w-5 h-5" /> NEXT.JS 14
+          </span>
+          <span className="text-lg font-bold flex items-center gap-2">
+            <Database className="w-5 h-5" /> ELECTRON
+          </span>
+          <span className="text-lg font-bold flex items-center gap-2">
+            <Layers className="w-5 h-5" /> FRAMER MOTION
+          </span>
+        </div>
+      </section>
+
+      {/* --- PINNED SECTION: THE JOURNEY (12 CHAPTERS) --- */}
+      <section ref={triggerRef} className="relative w-full bg-[#050712]">
+        <div className="max-w-7xl mx-auto flex flex-col md:flex-row">
+          {/* LEFT: SCROLLING TEXT */}
+          <div className="md:w-1/2 py-32 px-6 pb-[50vh]">
+            <StoryChapter
+              num="01"
+              title="The Barrier"
+              text="We realized a fundamental flaw in web development: Friction. Non-developers are locked out by syntax errors. Developers are slowed down by boilerplate."
+            />
+
+            <StoryChapter
+              num="02"
+              title="The Vision"
+              text="We didn't want another template builder. We wanted an Engine. A system that respects the architecture of your idea and translates natural language directly into structural reality."
+            />
+
+            <StoryChapter
+              num="03"
+              title="Not A Toy"
+              text="Most AI coding tools are 'black boxes' that spit out spaghetti code. XBLT generates clean, semantic, component-based code that you would be proud to commit."
+            />
+
+            <StoryChapter
+              num="04"
+              title="The Architect"
+              text="We introduced the Planner Agent. Before a single line of code is written, XBLT maps out your application's routes, components, and data flow."
+            />
+
+            <StoryChapter
+              num="05"
+              title="Orchestration"
+              text="Single-shot prompting is dead. XBLT uses Multi-Agent Orchestration. One agent designs, one codes, one critiques. This triangular loop ensures 99.9% syntax accuracy."
+            />
+
+            <StoryChapter
+              num="06"
+              title="The Stream"
+              text="Waiting is painful. We built a custom WebSocket engine that streams the DOM updates in real-time. You don't wait for the build; you watch the creation unfold live."
+            />
+
+            <StoryChapter
+              num="07"
+              title="The Desktop Leap"
+              text="Web browsers are sandboxes. To be a true OS, we moved to Desktop (Electron). Now XBLT has raw access to your file system, running dev servers and modifying files."
+            />
+
+            <StoryChapter
+              num="08"
+              title="Local LLMs"
+              text="Privacy matters. We integrated Ollama support so you can run Llama 3 or Mistral locally on your machine. Your code never has to leave your device."
+            />
+
+            <StoryChapter
+              num="09"
+              title="The RAG Brain"
+              text="This is the Singularity moment. Using local LlamaIndex, XBLT scans your previous projects. It learns your variable naming, your design tokens, and your coding style."
+            />
+
+            <StoryChapter
+              num="10"
+              title="Fluid State"
+              text="Speak. See. Ship. Development becomes conversational. You describe a change, and the Engine refactors the code instantly. The barrier dissolves."
+            />
+
+            <StoryChapter
+              num="11"
+              title="The Future"
+              text="XBLT is no longer just a tool. It is the Creation Operating System. We are building a future where anyone with an idea can architect a system at the speed of thought."
+            />
+
+            <StoryChapter
+              num="12"
+              title="Join Us"
+              text="We are just getting started. The engine is warming up. Download XBLT today and become part of the new era of software architecture."
+            />
+          </div>
+
+          {/* RIGHT: PINNED VISUAL */}
+          <div className="hidden md:flex md:w-1/2 h-screen pinned-story sticky top-0 items-center justify-center p-12">
+            <div className="relative w-full h-96 bg-[#0b1020]/95 border border-white/10 rounded-3xl overflow-hidden shadow-2xl flex items-center justify-center">
+              {/* Background Grid inside card */}
+              <div className="absolute inset-0 bg-size-[40px_40px] bg-[linear-gradient(to_right,#ffffff05_1px,transparent_1px),linear-gradient(to_bottom,#ffffff05_1px,transparent_1px)]"></div>
+
+              <AnimatePresence mode="wait">
+                <StoryVisual index={activeStory} />
+              </AnimatePresence>
+
+              {/* Progress Bar */}
+              <div className="absolute bottom-10 left-12 right-12 h-0.5 bg-white/10 rounded-full overflow-hidden">
+                <motion.div
+                  className="h-full bg-cyan-400"
+                  animate={{ width: `${((activeStory + 1) / 12) * 100}%` }}
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* RAHBEAR Outline Banner */}
+      <section className="relative overflow-hidden bg-[#050712] border-t border-white/5 py-16 select-none">
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute left-1/4 top-1/2 -translate-y-1/2 w-[500px] h-[300px] bg-cyan-500/5 blur-[100px] rounded-full" />
+          <div className="absolute right-1/4 top-1/2 -translate-y-1/2 w-[500px] h-[300px] bg-purple-500/5 blur-[100px] rounded-full" />
+        </div>
+
+        <div className="relative z-10 flex items-center justify-center overflow-hidden px-4">
+          <div
+            className="flex items-center justify-center font-black uppercase leading-none"
+            style={{ fontSize: 'clamp(4rem, 17vw, 17rem)', letterSpacing: '-0.04em' }}
+          >
+            {'RAHBEAR'.split('').map((letter, i) => (
+              <span
+                key={i}
+                style={{
+                  WebkitTextStroke: '2px rgba(34,211,238,0.35)',
+                  color: 'transparent',
+                  WebkitTextFillColor: 'transparent',
+                  display: 'inline-block',
+                  transition: 'filter 0.2s ease, -webkit-text-stroke 0.2s ease',
+                  cursor: 'default',
+                  filter: 'none',
+                }}
+                onMouseEnter={e => {
+                  e.currentTarget.style.WebkitTextStroke = '2px rgba(34,211,238,1)';
+                  e.currentTarget.style.filter =
+                    'drop-shadow(0 0 6px rgba(34,211,238,1)) drop-shadow(0 0 18px rgba(34,211,238,0.85)) drop-shadow(0 0 40px rgba(34,211,238,0.6)) drop-shadow(0 0 80px rgba(34,211,238,0.3))';
+                }}
+                onMouseLeave={e => {
+                  e.currentTarget.style.WebkitTextStroke = '2px rgba(34,211,238,0.35)';
+                  e.currentTarget.style.filter = 'none';
+                }}
+              >
+                {letter}
+              </span>
+            ))}
+          </div>
+        </div>
+
+        <div className="relative z-10 mt-6 flex items-center justify-center gap-4 px-6">
+          <div className="flex-1 max-w-xs h-px bg-gradient-to-r from-transparent to-cyan-500/30" />
+          <span className="text-xs text-gray-600 uppercase tracking-widest font-semibold">Full Stack Developer</span>
+          <div className="flex-1 max-w-xs h-px bg-gradient-to-l from-transparent to-purple-500/30" />
+        </div>
+      </section>
+
+      <Footer />
+    </div>
+  );
 };
 
-export default About;
+/* --- SUB COMPONENTS --- */
+
+const StoryChapter = ({ num, title, text }) => (
+  <div className="story-step min-h-[60vh] flex flex-col justify-center border-l-2 border-transparent pl-8 ml-4 transition-all duration-500">
+    <div className="chapter-num text-cyan-400 font-mono text-sm mb-4 font-bold tracking-widest flex items-center gap-2">
+      <span className="w-2 h-2 bg-cyan-400 rounded-full"></span> CHAPTER {num}
+    </div>
+    <h2 className="text-4xl md:text-6xl font-bold mb-6 text-white leading-tight">
+      {title}
+    </h2>
+    <p className="text-gray-400 text-lg leading-relaxed max-w-lg">{text}</p>
+  </div>
+);
+
+const StoryVisual = ({ index }) => {
+  const content = [
+    {
+      icon: <Lock className="w-24 h-24 text-red-500" />,
+      title: "THE BARRIER",
+      sub: "Syntax Locked",
+    },
+    {
+      icon: <Flag className="w-24 h-24 text-white" />,
+      title: "THE VISION",
+      sub: "Idea → Reality",
+    },
+    {
+      icon: <Code2 className="w-24 h-24 text-blue-500" />,
+      title: "NOT A TOY",
+      sub: "Clean Code",
+    },
+    {
+      icon: <Brain className="w-24 h-24 text-purple-500" />,
+      title: "ARCHITECT",
+      sub: "Planner Agent",
+    },
+    {
+      icon: <Workflow className="w-24 h-24 text-cyan-400" />,
+      title: "ORCHESTRA",
+      sub: "Multi-Agent",
+    },
+    {
+      icon: <Zap className="w-24 h-24 text-yellow-400" />,
+      title: "STREAMING",
+      sub: "WebSocket DOM",
+    },
+    {
+      icon: <HardDrive className="w-24 h-24 text-gray-400" />,
+      title: "DESKTOP OS",
+      sub: "File System",
+    },
+    {
+      icon: <Terminal className="w-24 h-24 text-orange-500" />,
+      title: "LOCAL LLM",
+      sub: "Ollama / Mistral",
+    },
+    {
+      icon: <Database className="w-24 h-24 text-pink-500" />,
+      title: "RAG MEMORY",
+      sub: "Context Aware",
+    },
+    {
+      icon: <Sparkles className="w-24 h-24 text-cyan-400" />,
+      title: "FLUIDITY",
+      sub: "Flow State",
+    },
+    {
+      icon: <Rocket className="w-24 h-24 text-white" />,
+      title: "THE FUTURE",
+      sub: "Creation OS",
+    },
+    {
+      icon: <Globe className="w-24 h-24 text-green-500" />,
+      title: "JOIN US",
+      sub: "Global Network",
+    },
+  ];
+
+  const item = content[index] || content[0];
+
+  return (
+    <motion.div
+      key={index}
+      initial={{ opacity: 0, rotateY: 90, scale: 0.8 }}
+      animate={{ opacity: 1, rotateY: 0, scale: 1 }}
+      exit={{ opacity: 0, rotateY: -90, scale: 0.8 }}
+      transition={{ duration: 0.5, ease: "backOut" }}
+      className="flex flex-col items-center justify-center h-full w-full"
+    >
+      <div className="mb-8 p-10 bg-white/5 rounded-full border border-white/10 shadow-[0_0_60px_rgba(255,255,255,0.05)] scale-110">
+        {item.icon}
+      </div>
+      <h3 className="text-5xl font-bold mb-2 text-white uppercase tracking-tighter">
+        {item.title}
+      </h3>
+      <div className="px-3 py-1 border border-cyan-500/30 bg-cyan-500/10 text-cyan-400 font-mono text-xs tracking-widest uppercase rounded">
+        SYS_CORE :: {item.sub}
+      </div>
+
+      <div className="absolute top-10 left-10 w-8 h-8 border-t-2 border-l-2 border-white/20"></div>
+      <div className="absolute bottom-10 right-10 w-8 h-8 border-b-2 border-r-2 border-white/20"></div>
+    </motion.div>
+  );
+};
+
+export default XBLTAbout;
