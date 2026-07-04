@@ -105,82 +105,28 @@ const SkillChapter = ({ num, title, text }) => (
   </div>
 );
 
-/* ─── Keyboard Rows for the interactive 3D component ─── */
-const keyboardRows = [
-  // ROW 1: Numbers & Specials (14 keys)
-  [
-    { key: "ESC", code: "Escape", name: "Git", desc: "Distributed version control system." },
-    { key: "1", code: "Digit1", name: "HTML5", desc: "Semantic markup parser engine." },
-    { key: "2", code: "Digit2", name: "CSS3", desc: "Vanilla cascading layout design module." },
-    { key: "3", code: "Digit3", name: "JavaScript", desc: "Dynamic script processor." },
-    { key: "4", code: "Digit4", name: "TypeScript", desc: "Strict typed superset language." },
-    { key: "5", code: "Digit5", name: "Python", desc: "High-level language for automation." },
-    { key: "6", code: "Digit6", name: "Golang", desc: "Compiled fast concurrent backend runner." },
-    { key: "7", code: "Digit7", name: "Rust", desc: "Systems language with compile safety." },
-    { key: "8", code: "Digit8", name: "Java", desc: "Object-oriented backend framework core." },
-    { key: "9", code: "Digit9", name: "C++", desc: "Native memory efficiency engine." },
-    { key: "0", code: "Digit0", name: "C#", desc: "Microsoft core software programming platform." },
-    { key: "-", code: "Minus", name: "Ruby", desc: "Dynamic object structure system." },
-    { key: "=", code: "Equal", name: "PHP", desc: "Server scripting module wrapper." },
-    { key: "BACK", code: "Backspace", name: "Bash", desc: "Shell terminal control engine." },
-  ],
-  // ROW 2: QWERTY Row (13 keys)
-  [
-    { key: "TAB", code: "Tab", name: "Vite", desc: "Ultra-fast frontend build engine." },
-    { key: "Q", code: "KeyQ", name: "React", desc: "Virtual DOM UI component system." },
-    { key: "W", code: "KeyW", name: "Vue.js", desc: "Progressive reactive framework module." },
-    { key: "E", code: "KeyE", name: "Svelte", desc: "Compile-time vanilla client optimizer." },
-    { key: "R", code: "KeyR", name: "Next.js", desc: "Full-stack SSR React production setup." },
-    { key: "T", code: "KeyT", name: "Nuxt.js", desc: "Server-rendered Vue web application." },
-    { key: "Y", code: "KeyY", name: "Angular", desc: "Robust typescript enterprise layout." },
-    { key: "U", code: "KeyU", name: "Node.js", desc: "V8 engine server platform runner." },
-    { key: "I", code: "KeyI", name: "Express", desc: "Minimalist routing connector." },
-    { key: "O", code: "KeyO", name: "FastAPI", desc: "Python auto-documentation API framework." },
-    { key: "P", code: "KeyP", name: "Django", desc: "Battery-included Python structure." },
-    { key: "[", code: "BracketLeft", name: "Spring", desc: "Java microservices controller core." },
-    { key: "]", code: "BracketRight", name: "Laravel", desc: "PHP MVC application architect setup." },
-  ],
-  // ROW 3: ASDF Row (13 keys)
-  [
-    { key: "CAPS", code: "CapsLock", name: "Tailwind", desc: "Utility utility-first layout builder." },
-    { key: "A", code: "KeyA", name: "MongoDB", desc: "NoSQL document storage server." },
-    { key: "S", code: "KeyS", name: "Postgres", desc: "Advanced SQL relational schema core." },
-    { key: "D", code: "KeyD", name: "MySQL", desc: "Classic database query connector." },
-    { key: "F", code: "KeyF", name: "Redis", desc: "High speed server session cache." },
-    { key: "G", code: "KeyG", name: "SQLite", desc: "Serverless local database system." },
-    { key: "H", code: "KeyH", name: "GraphQL", desc: "Type-safe query language adapter." },
-    { key: "J", code: "KeyJ", name: "Docker", desc: "Virtual containers for code packaging." },
-    { key: "K", code: "KeyK", name: "K8s", desc: "Kubernetes cloud management platform." },
-    { key: "L", code: "KeyL", name: "AWS", desc: "Amazon web cloud engine." },
-    { key: ";", code: "Semicolon", name: "GCP", desc: "Google cloud microservices runner." },
-    { key: "'", code: "Quote", name: "Firebase", desc: "Real-time key collection store." },
-    { key: "ENTER", code: "Enter", name: "GitLab CI", desc: "Pipeline automated compilation." },
-  ],
-  // ROW 4: ZXCV Row (12 keys)
-  [
-    { key: "SHIFT", code: "ShiftLeft", name: "Zustand", desc: "Atomic global state manager." },
-    { key: "Z", code: "KeyZ", name: "Redux", desc: "Immutable state dispatch model." },
-    { key: "X", code: "KeyX", name: "RxJS", desc: "Async stream observable processor." },
-    { key: "C", code: "KeyC", name: "Webpack", desc: "Classic package build bundler." },
-    { key: "V", code: "KeyV", name: "Three.js", desc: "Interactive WebGL 3D rendering." },
-    { key: "B", code: "KeyB", name: "Electron", desc: "HTML/JS crossplatform window module." },
-    { key: "N", code: "KeyN", name: "Tauri", desc: "Lightweight Rust shell backend." },
-    { key: "M", code: "KeyM", name: "Figma", desc: "Collaborative design mapping vector." },
-    { key: ",", code: "Comma", name: "Apollo", desc: "GraphQL server state fetch client." },
-    { key: ".", code: "Period", name: "Prisma", desc: "Modern type-safe ORM library." },
-    { key: "/", code: "Slash", name: "Postman", desc: "Route fetch verification panel." },
-    { key: "S-SHIFT", code: "ShiftRight", name: "Vercel", desc: "Edge serverless cloud publisher." },
-  ],
-  // ROW 5: Spacebar & Modifiers (7 keys)
-  [
-    { key: "CTRL", code: "ControlLeft", name: "Linux", desc: "Kernel terminal system processor." },
-    { key: "ALT", code: "AltLeft", name: "Jest", desc: "Automated assertion testing module." },
-    { key: "SPACEBAR", code: "Space", name: "WebAssembly", desc: "High performance binary bytecodes." },
-    { key: "SWIFT", code: "KeyS", name: "Swift", desc: "Native Apple programming script." },
-    { key: "KOTLIN", code: "KeyK", name: "Kotlin", desc: "Native Android system runner." },
-    { key: "DART", code: "KeyD", name: "Dart", desc: "Client side framework system driver." },
-    { key: "FN", code: "ControlRight", name: "Sass", desc: "Pre-compiled cascading design modules." },
-  ],
+/* ─── Animated Skill Cards ─── */
+const animatedSkills = [
+  { name: "React", tag: "UI", desc: "Interactive interfaces and component architecture.", icon: <Code2 className="w-5 h-5" />, accent: "from-cyan-500 to-blue-500" },
+  { name: "Next.js", tag: "Full Stack", desc: "SSR, routing, and production-ready app flows.", icon: <Globe className="w-5 h-5" />, accent: "from-slate-500 to-zinc-600" },
+  { name: "Tailwind", tag: "Styling", desc: "Rapid, modern, responsive design systems.", icon: <Layers className="w-5 h-5" />, accent: "from-sky-500 to-cyan-500" },
+  { name: "Framer Motion", tag: "Animation", desc: "Liquid motion, transitions, and polished interactions.", icon: <Sparkles className="w-5 h-5" />, accent: "from-fuchsia-500 to-purple-500" },
+  { name: "GSAP", tag: "Animation", desc: "Timeline-driven scroll and canvas effects.", icon: <Zap className="w-5 h-5" />, accent: "from-amber-500 to-orange-500" },
+  { name: "JavaScript", tag: "Core", desc: "Modern logic, async flows, and browser APIs.", icon: <Cpu className="w-5 h-5" />, accent: "from-yellow-500 to-amber-500" },
+  { name: "TypeScript", tag: "Core", desc: "Strong typing for safer, scalable products.", icon: <Terminal className="w-5 h-5" />, accent: "from-blue-500 to-indigo-500" },
+  { name: "Node.js", tag: "Backend", desc: "Fast server-side JavaScript experiences.", icon: <HardDrive className="w-5 h-5" />, accent: "from-emerald-500 to-green-500" },
+  { name: "Express", tag: "Backend", desc: "Flexible API routing and middleware design.", icon: <Monitor className="w-5 h-5" />, accent: "from-rose-500 to-pink-500" },
+  { name: "MongoDB", tag: "Database", desc: "Flexible document storage for modern apps.", icon: <Database className="w-5 h-5" />, accent: "from-green-500 to-lime-500" },
+  { name: "PostgreSQL", tag: "Database", desc: "Relational data with high reliability.", icon: <Database className="w-5 h-5" />, accent: "from-cyan-600 to-blue-700" },
+  { name: "Git & GitHub", tag: "Workflow", desc: "Version control and team collaboration.", icon: <Rocket className="w-5 h-5" />, accent: "from-slate-500 to-gray-600" },
+  { name: "Docker", tag: "DevOps", desc: "Portable containers for consistent deployment.", icon: <Package className="w-5 h-5" />, accent: "from-sky-500 to-indigo-500" },
+  { name: "Vercel", tag: "Deploy", desc: "Smooth deployment for frontend and full-stack apps.", icon: <Globe className="w-5 h-5" />, accent: "from-teal-500 to-cyan-500" },
+  { name: "Figma", tag: "Design", desc: "UI wireframes and polished user journeys.", icon: <Sparkles className="w-5 h-5" />, accent: "from-pink-500 to-rose-500" },
+  { name: "Python", tag: "Automation", desc: "Scripts, APIs, and intelligent tooling.", icon: <Brain className="w-5 h-5" />, accent: "from-violet-500 to-purple-500" },
+  { name: "AI / LLM", tag: "Innovation", desc: "Modern assistants, prompts, and smart workflows.", icon: <Brain className="w-5 h-5" />, accent: "from-fuchsia-500 to-violet-500" },
+  { name: "REST APIs", tag: "Integration", desc: "Connected services and reliable data exchange.", icon: <Terminal className="w-5 h-5" />, accent: "from-orange-500 to-amber-500" },
+  { name: "Supabase", tag: "Backend", desc: "Open-source backend with auth and storage.", icon: <Database className="w-5 h-5" />, accent: "from-emerald-500 to-teal-500" },
+  { name: "UI/UX", tag: "Experience", desc: "User-centered design with clarity and impact.", icon: <Layers className="w-5 h-5" />, accent: "from-cyan-400 to-fuchsia-500" },
 ];
 
 /* ─── MAIN COMPONENT ─── */
@@ -191,10 +137,6 @@ const Skills = () => {
   const [activeChapter, setActiveChapter] = useState(0);
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const [activeDomain, setActiveDomain] = useState(null);
-
-  // Bottom Keyboard Interactive States
-  const [selectedKey, setSelectedKey] = useState(keyboardRows[1][1]); // Q - React
-  const [pressedKeyCode, setPressedKeyCode] = useState(null);
 
   // Mouse Parallax
   useEffect(() => {
@@ -252,32 +194,6 @@ const Skills = () => {
     }, containerRef);
 
     return () => ctx.revert();
-  }, []);
-
-  // Key Event Listeners for the Bottom Keyboard Component
-  useEffect(() => {
-    const handleKeyDown = (e) => {
-      // Check if key exists in keyboard rows
-      for (const row of keyboardRows) {
-        const found = row.find((k) => k.code === e.code);
-        if (found) {
-          setPressedKeyCode(e.code);
-          setSelectedKey(found);
-          break;
-        }
-      }
-    };
-
-    const handleKeyUp = () => {
-      setPressedKeyCode(null);
-    };
-
-    window.addEventListener("keydown", handleKeyDown);
-    window.addEventListener("keyup", handleKeyUp);
-    return () => {
-      window.removeEventListener("keydown", handleKeyDown);
-      window.removeEventListener("keyup", handleKeyUp);
-    };
   }, []);
 
   return (
@@ -512,80 +428,42 @@ const Skills = () => {
         </div>
       </section>
 
-      {/* ─── 3D KEYBOARD SECTION ABOVE FOOTER ─── */}
+      {/* ─── ANIMATED SKILLS SECTION ABOVE FOOTER ─── */}
       <section className="py-20 bg-[#050712] border-t border-white/10 relative overflow-hidden">
-        <div className="max-w-6xl mx-auto px-6">
+        <div className="max-w-7xl mx-auto px-6">
           <div className="text-center mb-10">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-cyan-500/30 bg-cyan-500/5 text-cyan-400 text-xs font-mono mb-6">
-              <Zap className="w-3 h-3 text-yellow-400" /> INTERACTIVE HARDWARE ENGINE
+              <Zap className="w-3 h-3 text-yellow-400" /> ANIMATED SKILL MATRIX
             </div>
             <h2 className="text-4xl md:text-6xl font-bold tracking-tighter text-white">
-              THE MECHANICAL <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500">KEYBOARD.</span>
+              20 <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500">SKILLS</span> IN MOTION.
             </h2>
-            <p className="text-slate-500 text-sm mt-3">Click on virtual keys or use your physical keyboard to display module logs.</p>
+            <p className="text-slate-500 text-sm mt-3">A modern stack of tools, frameworks, and workflows crafted for fast, polished product delivery.</p>
           </div>
 
-          {/* Mini-Console / Monitor for the Keyboard */}
-          <div className="max-w-3xl mx-auto mb-10 bg-[#0b1020] border border-white/10 rounded-2xl p-5 shadow-2xl relative overflow-hidden">
-            <div className="absolute inset-0 bg-[linear-gradient(rgba(18,16,16,0)_50%,_rgba(0,0,0,0.1)_50%)] bg-[size:100%_4px] pointer-events-none" />
-            <div className="relative font-mono text-xs text-cyan-400 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-              <div>
-                <span className="text-slate-600 font-bold uppercase tracking-wider text-[10px] block">Active Module</span>
-                <span className="text-white text-lg font-black">{selectedKey.name}</span>
-              </div>
-              <div className="flex-1 sm:max-w-md">
-                <span className="text-slate-600 font-bold uppercase tracking-wider text-[10px] block">Functional Description</span>
-                <span className="text-slate-300 text-xs mt-0.5 block">{selectedKey.desc}</span>
-              </div>
-              <div className="text-right">
-                <span className="text-slate-600 font-bold uppercase tracking-wider text-[10px] block">Keycode</span>
-                <span className="text-cyan-300 text-sm font-bold bg-white/5 border border-white/10 px-2 py-0.5 rounded inline-block mt-0.5">{selectedKey.key}</span>
-              </div>
-            </div>
-          </div>
-
-          {/* 3D Mechanical Keyboard Grid */}
-          <div className="overflow-x-auto pb-4">
-            <div
-              className="min-w-[860px] bg-[#0c0f1d] border-4 border-[#1e293b] rounded-2xl p-4 mx-auto relative shadow-[0_20px_50px_rgba(0,0,0,0.8),inset_0_4px_12px_rgba(255,255,255,0.04)]"
-              style={{ transform: "rotateX(14deg) rotateY(-2deg)", transformStyle: "preserve-3d" }}
-            >
-              <div className="space-y-2">
-                {keyboardRows.map((row, rIdx) => (
-                  <div key={rIdx} className="flex justify-center gap-1.5">
-                    {row.map((keycap, kIdx) => {
-                      const isActive = selectedKey.name === keycap.name;
-                      const isPressed = pressedKeyCode === keycap.code;
-
-                      // Dynamic width helper based on key labels
-                      let kw = "w-10";
-                      if (keycap.key === "SPACEBAR") kw = "w-64";
-                      else if (["BACK", "ENTER", "SHIFT", "S-SHIFT"].includes(keycap.key)) kw = "w-20";
-                      else if (["TAB", "CAPS", "CTRL", "ALT", "ALT GR", "WIN", "FN"].includes(keycap.key)) kw = "w-14";
-
-                      return (
-                        <button
-                          key={kIdx}
-                          onClick={() => setSelectedKey(keycap)}
-                          title={`${keycap.key}: ${keycap.name}`}
-                          className={`h-10 ${kw} rounded-lg text-[8px] font-black font-mono flex flex-col justify-between p-1 transition-all cursor-pointer select-none active:translate-y-1 active:shadow-[0_1px_0_#0f172a,0_2px_4px_rgba(0,0,0,0.5)] ${
-                            isPressed || isActive
-                              ? "bg-cyan-500 text-black translate-y-[3px] shadow-[0_1px_0_#0f172a]"
-                              : "bg-[#181d30] text-slate-400 shadow-[0_4px_0_#090b16,0_8px_10px_rgba(0,0,0,0.5)] border-t border-white/5 hover:bg-[#1f253d] hover:text-white"
-                          }`}
-                          style={{ transformStyle: "preserve-3d" }}
-                        >
-                          <div className="self-start text-[7px] opacity-40">{keycap.key}</div>
-                          <div className="self-end font-bold text-[8px] overflow-hidden whitespace-nowrap text-ellipsis max-w-full">
-                            {keycap.name.split(" ")[0]}
-                          </div>
-                        </button>
-                      );
-                    })}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            {animatedSkills.map((skill, index) => (
+              <motion.div
+                key={skill.name}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.2 }}
+                transition={{ delay: index * 0.04, duration: 0.35 }}
+                whileHover={{ scale: 1.03, y: -6, rotate: -1 }}
+                animate={{ y: [0, -6, 0], scale: [1, 1.01, 1] }}
+                transition={{ duration: 4.2, repeat: Infinity, repeatDelay: 0.4, delay: index * 0.15, ease: "easeInOut" }}
+                className={`p-[1px] rounded-2xl bg-gradient-to-br ${skill.accent} shadow-[0_10px_40px_rgba(0,0,0,0.2)]`}
+              >
+                <div className="bg-[#050712] rounded-[15px] p-4 h-full">
+                  <div className="flex items-center justify-between mb-3">
+                    <div className="p-2 rounded-lg bg-white/10 text-white">{skill.icon}</div>
+                    <span className="text-[10px] uppercase tracking-[0.24em] text-cyan-300">{skill.tag}</span>
                   </div>
-                ))}
-              </div>
-            </div>
+                  <h3 className="text-lg font-semibold text-white">{skill.name}</h3>
+                  <p className="text-sm text-slate-400 mt-2 leading-relaxed">{skill.desc}</p>
+                </div>
+              </motion.div>
+            ))}
           </div>
         </div>
       </section>
